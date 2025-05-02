@@ -47,7 +47,7 @@ jobs:
 
       - name: Update Helm values for Staging
         run: |
-          python scripts/update_helm_values.py helm/react-app/values-staging.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
+          python .github/scripts/update_helm_values.py helm/react-app/values-staging.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-staging.yaml
@@ -70,14 +70,14 @@ jobs:
 
       - name: Update Helm values for QA
         run: |
-          python scripts/update_helm_values.py helm/react-app/values-qa.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
+          python .github/scripts/update_helm_values.py helm/react-app/values-qa.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-qa.yaml
           git commit -m "Update QA Helm values to ${{ github.sha }}"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
   deploy-live:
     needs: build-and-push
@@ -93,11 +93,11 @@ jobs:
 
       - name: Update Helm values for Live
         run: |
-          python scripts/update_helm_values.py helm/react-app/values-live.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
+          python .github/scripts/update_helm_values.py helm/react-app/values-live.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-live.yaml
           git commit -m "Update live Helm values to ${{ github.sha }}"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
