@@ -2,7 +2,7 @@ appName: react-app-qa
 namespace: qa
 replicaCount: 2
 image:
-  repository: imrishav/gitops01
+  repository: dockerbabuli/gitops01
   tag: 604ac3b39a717bbceb7e0386debaed67fd7857bb
 service:
   nodePort: 31002

@@ -23,6 +23,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Read and increment version
+        id: versioning
+        run: |
+            if [ ! -f version.txt ]; then echo "1" > version.txt; fi
+            version=$(cat version.txt)
+            new_version=$((version + 1))
+            echo $new_version > version.txt
+            echo "version=$new_version" >> $GITHUB_ENV
+
+      - name: Commit updated version
+        run: |
+              git config --global user.email "github-actions@github.com"
+              git config --global user.name "GitHub Actions"
+              git add version.txt
+              git commit -m "Increment version to ${{ env.version }}"
+              git push
+        env:
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -30,7 +49,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/gitops01:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/gitops:${{ env.version }}
             ${{ secrets.DOCKER_USERNAME }}/gitops01:latest
 
       - name: Set up Python
@@ -57,11 +76,11 @@ jobs:
 
       - name: Update Helm values for Staging
         run: |
-          python .github/scripts/update_helm_values.py helm/react-app/values-staging.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
+          sed -i "s|tag: .*|tag: ${{ env.version }}|g" helm/react-app/values-staging.yaml
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-staging.yaml
-          git commit -m "Update staging Helm values to ${{ github.sha }}"
+          git commit -m "Update staging Helm values to version ${{ env.version }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -83,11 +102,11 @@ jobs:
 
       - name: Update Helm values for QA
         run: |
-          python .github/scripts/update_helm_values.py helm/react-app/values-qa.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
+          sed -i "s|tag: .*|tag: ${{ env.version }}|g" helm/react-app/values-qa.yaml
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-qa.yaml
-          git commit -m "Update QA Helm values to ${{ github.sha }}"
+          git commit -m "Update QA Helm values to version ${{ env.version }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -109,11 +128,11 @@ jobs:
 
       - name: Update Helm values for Live
         run: |
-          python .github/scripts/update_helm_values.py helm/react-app/values-live.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
+          sed -i "s|tag: .*|tag: ${{ env.version }}|g" helm/react-app/values-live.yaml
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-live.yaml
-          git commit -m "Update live Helm values to ${{ github.sha }}"
+          git commit -m "Update live Helm values to version ${{ env.version }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

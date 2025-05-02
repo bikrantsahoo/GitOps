@@ -2,7 +2,7 @@ appName: react-app-live
 namespace: live
 replicaCount: 3
 image:
-  repository: imrishav/gitops01
-  tag: 604ac3b39a717bbceb7e0386debaed67fd7857bb
+  repository: dockerbabuli/gitops01
+  tag: 2
 service:
   nodePort: 31003
