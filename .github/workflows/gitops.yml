@@ -30,8 +30,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/gitops01:${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/gitops01:latest
+            ${{ secrets.DOCKER_USERNAME }}/gitops01:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/gitops01:latest
 
   deploy-staging:
     needs: build-and-push
