@@ -32,7 +32,7 @@ jobs:
             echo $new_version > version.txt
             echo "version=$new_version" >> $GITHUB_ENV
 
-      - name: Commit updated version
+      - name: Commit updated versionn
         run: |
               git config --global user.email "github-actions@github.com"
               git config --global user.name "GitHub Actions"
