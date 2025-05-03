@@ -1,0 +1,8 @@
+appName: react-app-live
+namespace: live
+replicaCount: 3
+image:
+  repository: dockerbabuli/gitops01
+  tag: 2
+service:
+  nodePort: 31003
