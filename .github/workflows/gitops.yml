@@ -38,7 +38,7 @@ jobs:
               git config --global user.name "GitHub Actions"
               git add version.txt
               git commit -m "Increment version to ${{ env.version }}"
-              git push
+              git push origin HEAD:main
         env:
             GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
