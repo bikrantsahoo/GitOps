@@ -62,7 +62,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-staging.yaml
           git commit -m "Update staging Helm values to ${{ github.sha }}"
-          git push
+          git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
