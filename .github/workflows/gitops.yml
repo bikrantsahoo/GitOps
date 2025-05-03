@@ -23,29 +23,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set up Git identity
-        run: |
-            git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
-
-      - name: Read and increment version
-        id: versioning
-        run: |
-            if [ ! -f version.txt ]; then echo "1" > version.txt; fi
-            version=$(cat version.txt)
-            new_version=$((version + 1))
-            echo $new_version > version.txt
-            echo "version=$new_version" >> $GITHUB_ENV
-
-      - name: Commit updated versionn
-        run: |
-            git add version.txt
-            git commit -m "Increment version to 2"
-            git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/bikrantsahoo/GitOps.git
-            git push origin HEAD:main
-        env:
-            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -53,7 +30,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/gitops:${{ env.version }}
+            ${{ secrets.DOCKER_USERNAME }}/gitops01:${{ github.sha }}
             ${{ secrets.DOCKER_USERNAME }}/gitops01:latest
 
       - name: Set up Python
