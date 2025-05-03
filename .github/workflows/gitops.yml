@@ -34,11 +34,10 @@ jobs:
 
       - name: Commit updated versionn
         run: |
-              git config --global user.email "github-actions@github.com"
-              git config --global user.name "GitHub Actions"
-              git add version.txt
-              git commit -m "Increment version to ${{ env.version }}"
-              git push origin HEAD:main
+            git add version.txt
+            git commit -m "Increment version to 2"
+            git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/bikrantsahoo/GitOps.git
+            git push origin HEAD:main
         env:
             GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
