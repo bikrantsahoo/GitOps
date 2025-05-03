@@ -57,14 +57,15 @@ jobs:
 
       - name: Update Helm values for Staging
         run: |
-          sed -i "s|tag: .*|tag: ${{ env.version }}|g" helm/react-app/values-staging.yaml
+          python .github/scripts/update_helm_values.py helm/react-app/values-staging.yaml ${{ secrets.DOCKERHUB_USERNAME }}/gitops01 ${{ github.sha }}
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add helm/react-app/values-staging.yaml
-          git commit -m "Update staging Helm values to version ${{ env.version }}"
+          git commit -m "Update staging Helm values to ${{ github.sha }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
   deploy-qa:
     needs: build-and-push
